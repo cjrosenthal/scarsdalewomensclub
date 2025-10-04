@@ -1,5 +1,5 @@
 ### Project Brief
-"rag" is a web application to allow users to upload documents and then build a custom gpt that responds with answers from those documents.
+ScarsdaleWomensClub is a web application to allow users to manage their calender of events and the way that they rent out their facility to people throughout the year.
 
 ## User Types
 
@@ -39,7 +39,83 @@ IMPORTANT: When making database changes, always update schema.sql to reflect the
 4. There is a config.local.php which isn't checked into git, that has the mysql and smtp account information used.
 
 ## Data Model Notes
-1. The data model is best understood by reading schema.sql
+1. The data model is best understood by reading schema.sql but the plan for the data model is as follows: 
+Rooms: The rooms of the women's club, like the library
+- Name
+- Capacity
+
+Contacts: People and their contact information that represent customers and potential customers of the women's club. 
+- First Name
+- Last Name
+- Email
+- Organization
+- Phone Number
+ 
+Lead: A lead is a primary contact or possibly secondary contact that has expressed interest in booking an enent at the women's club.
+- Main_Contact
+- Other contacts (another table lead_secondary_contact)
+- channel (google, zola)
+- created_at
+- Type of party
+- Number of people
+- Description
+
+Lead_Comments: Comment made by a user on a lead.
+- Lead_id
+- Comments
+- Created_by
+- Created_at
+- Tour scheduled?
+- Status (new, active, converted_to_reservation, deleted)
+
+Reservations: A reservation for using the women's club during a certain time range on a date.
+- Internal or external
+- Start DateTime
+- End DateTime
+- internal_club_name
+- Entire Venue or not
+- Rooms used
+- Planning to use tents?
+- Contract Status ("new", "contract_sent", "contract_signed")
+- Fee
+- Deposit required (defaults to 50% of fee)
+- Deposit_paid?
+- Approved_by
+- post_event_notes
+- security_deposit_returned
+
+Payments: notes in this system that a payment was made on behalf of a reservation
+- Reservation
+- Amount
+- Date
+- Proof of payment (like copy of check) ... a file id. 
+
+Contract: A legal contract for a reservation and whether it was signed.
+- Name
+- Description
+- File_id
+- Reservation_id
+- Signed?
+- Date_uploaded
+
+-- Secure files (reimbursement attachments)
+CREATE TABLE secure_files (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  data LONGBLOB NOT NULL,
+  content_type VARCHAR(100) DEFAULT NULL,
+  original_filename VARCHAR(255) DEFAULT NULL,
+  byte_length INT UNSIGNED DEFAULT NULL,
+  sha256 CHAR(64) DEFAULT NULL,
+  created_by_user_id INT DEFAULT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_sf_created_by FOREIGN KEY (created_by_user_id) REFERENCES users(id) ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+CREATE INDEX idx_sf_sha256 ON secure_files(sha256);
+CREATE INDEX idx_sf_created_by ON secure_files(created_by_user_id);
+CREATE INDEX idx_sf_created_at ON secure_files(created_at);
+
+
 
 ## Naming
 It is very important to me that functions and methods be named well.  The name of a method should express its intent.  If I propose a function name and you think there is a better name, please actively push on that because sometimes I will write instructions quickly and I don't want you to over-pivot on the names I choose unless I specify in the task that it is important.
