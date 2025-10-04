@@ -14,7 +14,7 @@ header_html('Rooms');
 
 <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
   <h2>Rooms</h2>
-  <a class="button" href="/admin/room_add.php">Add Room</a>
+  <a class="button" href="/rooms/add.php">Add Room</a>
 </div>
 
 <?php if ($msg): ?><p class="flash"><?=h($msg)?></p><?php endif; ?>
@@ -40,7 +40,7 @@ header_html('Rooms');
             <td><?= h($room['name'] ?? '') ?></td>
             <td><?= h($room['capacity'] ?? '0') ?></td>
             <td class="small">
-              <a class="button small" href="/admin/room_edit.php?id=<?= (int)$room['id'] ?>">Edit</a>
+              <a class="button small" href="/rooms/edit.php?id=<?= (int)$room['id'] ?>">Edit</a>
             </td>
           </tr>
         <?php endforeach; ?>

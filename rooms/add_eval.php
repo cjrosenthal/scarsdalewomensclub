@@ -6,13 +6,13 @@ require_admin();
 
 // Only allow POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: /admin/rooms.php');
+    header('Location: /rooms/list.php');
     exit;
 }
 
 require_csrf();
 
-$redirect = trim($_POST['redirect'] ?? '/admin/rooms.php');
+$redirect = trim($_POST['redirect'] ?? '/rooms/list.php');
 $name = trim($_POST['name'] ?? '');
 $capacity = trim($_POST['capacity'] ?? '');
 
@@ -34,10 +34,10 @@ try {
     exit;
 } catch (InvalidArgumentException $e) {
     // Validation error - redirect back to form with error
-    header('Location: /admin/room_add.php?' . $formData . '&err=' . urlencode($e->getMessage()));
+    header('Location: /rooms/add.php?' . $formData . '&err=' . urlencode($e->getMessage()));
     exit;
 } catch (Exception $e) {
     // Other errors
-    header('Location: /admin/room_add.php?' . $formData . '&err=' . urlencode('Error creating room: ' . $e->getMessage()));
+    header('Location: /rooms/add.php?' . $formData . '&err=' . urlencode('Error creating room: ' . $e->getMessage()));
     exit;
 }

@@ -9,13 +9,13 @@ $err = trim($_GET['err'] ?? '');
 
 $id = (int)($_GET['id'] ?? 0);
 if ($id <= 0) {
-    header('Location: /admin/contacts.php?err=' . urlencode('Invalid contact ID.'));
+    header('Location: /contacts/list.php?err=' . urlencode('Invalid contact ID.'));
     exit;
 }
 
 $contact = ContactManagement::findById($id);
 if (!$contact) {
-    header('Location: /admin/contacts.php?err=' . urlencode('Contact not found.'));
+    header('Location: /contacts/list.php?err=' . urlencode('Contact not found.'));
     exit;
 }
 
@@ -36,10 +36,10 @@ header_html('Edit Contact');
 <?php if ($err): ?><p class="error"><?=h($err)?></p><?php endif; ?>
 
 <div class="card">
-  <form method="post" action="/admin/contact_edit_eval.php" class="stack">
+  <form method="post" action="/contacts/edit_eval.php" class="stack">
     <input type="hidden" name="csrf" value="<?=h(csrf_token())?>">
     <input type="hidden" name="id" value="<?=h($id)?>">
-    <input type="hidden" name="redirect" value="/admin/contacts.php">
+    <input type="hidden" name="redirect" value="/contacts/list.php">
     
     <h3>Contact Information</h3>
     <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;">
@@ -66,7 +66,7 @@ header_html('Edit Contact');
 
     <div class="actions">
       <button class="primary" type="submit">Update Contact</button>
-      <a class="button" href="/admin/contacts.php">Cancel</a>
+      <a class="button" href="/contacts/list.php">Cancel</a>
     </div>
   </form>
 </div>
@@ -74,10 +74,10 @@ header_html('Edit Contact');
 <div class="card">
   <h3>Delete Contact</h3>
   <p>Permanently delete this contact. This action cannot be undone.</p>
-  <form method="post" action="/admin/contact_delete_eval.php" onsubmit="return confirm('Are you sure you want to delete this contact? This action cannot be undone.');">
+  <form method="post" action="/contacts/delete_eval.php" onsubmit="return confirm('Are you sure you want to delete this contact? This action cannot be undone.');">
     <input type="hidden" name="csrf" value="<?=h(csrf_token())?>">
     <input type="hidden" name="id" value="<?=h($id)?>">
-    <input type="hidden" name="redirect" value="/admin/contacts.php">
+    <input type="hidden" name="redirect" value="/contacts/list.php">
     <button type="submit" class="button danger">Delete Contact</button>
   </form>
 </div>

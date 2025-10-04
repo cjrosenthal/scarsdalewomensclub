@@ -6,17 +6,17 @@ require_admin();
 
 // Only allow POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: /admin/rooms.php');
+    header('Location: /rooms/list.php');
     exit;
 }
 
 require_csrf();
 
 $id = (int)($_POST['id'] ?? 0);
-$redirect = trim($_POST['redirect'] ?? '/admin/rooms.php');
+$redirect = trim($_POST['redirect'] ?? '/rooms/list.php');
 
 if ($id <= 0) {
-    header('Location: /admin/rooms.php?err=' . urlencode('Invalid room ID.'));
+    header('Location: /rooms/list.php?err=' . urlencode('Invalid room ID.'));
     exit;
 }
 

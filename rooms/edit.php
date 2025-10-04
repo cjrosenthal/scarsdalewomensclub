@@ -9,13 +9,13 @@ $err = trim($_GET['err'] ?? '');
 
 $id = (int)($_GET['id'] ?? 0);
 if ($id <= 0) {
-    header('Location: /admin/rooms.php?err=' . urlencode('Invalid room ID.'));
+    header('Location: /rooms/list.php?err=' . urlencode('Invalid room ID.'));
     exit;
 }
 
 $room = RoomManagement::findById($id);
 if (!$room) {
-    header('Location: /admin/rooms.php?err=' . urlencode('Room not found.'));
+    header('Location: /rooms/list.php?err=' . urlencode('Room not found.'));
     exit;
 }
 
@@ -33,10 +33,10 @@ header_html('Edit Room');
 <?php if ($err): ?><p class="error"><?=h($err)?></p><?php endif; ?>
 
 <div class="card">
-  <form method="post" action="/admin/room_edit_eval.php" class="stack">
+  <form method="post" action="/rooms/edit_eval.php" class="stack">
     <input type="hidden" name="csrf" value="<?=h(csrf_token())?>">
     <input type="hidden" name="id" value="<?=h($id)?>">
-    <input type="hidden" name="redirect" value="/admin/rooms.php">
+    <input type="hidden" name="redirect" value="/rooms/list.php">
     
     <h3>Room Information</h3>
     <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;">
@@ -50,7 +50,7 @@ header_html('Edit Room');
 
     <div class="actions">
       <button class="primary" type="submit">Update Room</button>
-      <a class="button" href="/admin/rooms.php">Cancel</a>
+      <a class="button" href="/rooms/list.php">Cancel</a>
     </div>
   </form>
 </div>
@@ -58,10 +58,10 @@ header_html('Edit Room');
 <div class="card">
   <h3>Delete Room</h3>
   <p>Permanently delete this room. This action cannot be undone.</p>
-  <form method="post" action="/admin/room_delete_eval.php" onsubmit="return confirm('Are you sure you want to delete this room? This action cannot be undone.');">
+  <form method="post" action="/rooms/delete_eval.php" onsubmit="return confirm('Are you sure you want to delete this room? This action cannot be undone.');">
     <input type="hidden" name="csrf" value="<?=h(csrf_token())?>">
     <input type="hidden" name="id" value="<?=h($id)?>">
-    <input type="hidden" name="redirect" value="/admin/rooms.php">
+    <input type="hidden" name="redirect" value="/rooms/list.php">
     <button type="submit" class="button danger">Delete Room</button>
   </form>
 </div>

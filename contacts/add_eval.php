@@ -6,13 +6,13 @@ require_login();
 
 // Only allow POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: /admin/contacts.php');
+    header('Location: /contacts/list.php');
     exit;
 }
 
 require_csrf();
 
-$redirect = trim($_POST['redirect'] ?? '/admin/contacts.php');
+$redirect = trim($_POST['redirect'] ?? '/contacts/list.php');
 $firstName = trim($_POST['first_name'] ?? '');
 $lastName = trim($_POST['last_name'] ?? '');
 $email = trim($_POST['email'] ?? '');
@@ -43,10 +43,10 @@ try {
     exit;
 } catch (InvalidArgumentException $e) {
     // Validation error - redirect back to form with error
-    header('Location: /admin/contact_add.php?' . $formData . '&err=' . urlencode($e->getMessage()));
+    header('Location: /contacts/add.php?' . $formData . '&err=' . urlencode($e->getMessage()));
     exit;
 } catch (Exception $e) {
     // Other errors
-    header('Location: /admin/contact_add.php?' . $formData . '&err=' . urlencode('Error creating contact: ' . $e->getMessage()));
+    header('Location: /contacts/add.php?' . $formData . '&err=' . urlencode('Error creating contact: ' . $e->getMessage()));
     exit;
 }

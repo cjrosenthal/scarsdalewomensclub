@@ -49,7 +49,7 @@ ob_start();
             <td><?= h($contact['organization'] ?? '') ?></td>
             <td><?= h($contact['phone_number'] ?? '') ?></td>
             <td class="small">
-              <a class="button small" href="/admin/contact_edit.php?id=<?= (int)$contact['id'] ?>">Edit</a>
+              <a class="button small" href="/contacts/edit.php?id=<?= (int)$contact['id'] ?>">Edit</a>
             </td>
           </tr>
         <?php endforeach; ?>

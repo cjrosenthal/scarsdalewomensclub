@@ -6,19 +6,19 @@ require_admin();
 
 // Only allow POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: /admin/rooms.php');
+    header('Location: /rooms/list.php');
     exit;
 }
 
 require_csrf();
 
 $id = (int)($_POST['id'] ?? 0);
-$redirect = trim($_POST['redirect'] ?? '/admin/rooms.php');
+$redirect = trim($_POST['redirect'] ?? '/rooms/list.php');
 $name = trim($_POST['name'] ?? '');
 $capacity = trim($_POST['capacity'] ?? '');
 
 if ($id <= 0) {
-    header('Location: /admin/rooms.php?err=' . urlencode('Invalid room ID.'));
+    header('Location: /rooms/list.php?err=' . urlencode('Invalid room ID.'));
     exit;
 }
 
@@ -41,10 +41,10 @@ try {
     exit;
 } catch (InvalidArgumentException $e) {
     // Validation error - redirect back to form with error
-    header('Location: /admin/room_edit.php?' . $formData . '&err=' . urlencode($e->getMessage()));
+    header('Location: /rooms/edit.php?' . $formData . '&err=' . urlencode($e->getMessage()));
     exit;
 } catch (Exception $e) {
     // Other errors
-    header('Location: /admin/room_edit.php?' . $formData . '&err=' . urlencode('Error updating room: ' . $e->getMessage()));
+    header('Location: /rooms/edit.php?' . $formData . '&err=' . urlencode('Error updating room: ' . $e->getMessage()));
     exit;
 }

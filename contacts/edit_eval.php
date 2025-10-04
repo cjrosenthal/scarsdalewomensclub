@@ -6,13 +6,13 @@ require_login();
 
 // Only allow POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: /admin/contacts.php');
+    header('Location: /contacts/list.php');
     exit;
 }
 
 require_csrf();
 
-$redirect = trim($_POST['redirect'] ?? '/admin/contacts.php');
+$redirect = trim($_POST['redirect'] ?? '/contacts/list.php');
 $id = (int)($_POST['id'] ?? 0);
 $firstName = trim($_POST['first_name'] ?? '');
 $lastName = trim($_POST['last_name'] ?? '');
@@ -21,7 +21,7 @@ $organization = trim($_POST['organization'] ?? '');
 $phoneNumber = trim($_POST['phone_number'] ?? '');
 
 if ($id <= 0) {
-    header('Location: /admin/contacts.php?err=' . urlencode('Invalid contact ID.'));
+    header('Location: /contacts/list.php?err=' . urlencode('Invalid contact ID.'));
     exit;
 }
 
@@ -48,15 +48,15 @@ try {
         $msg = "You have updated the contact '" . $firstName . ' ' . $lastName . "'";
         header('Location: ' . $redirect . '?msg=' . urlencode($msg));
     } else {
-        header('Location: /admin/contact_edit.php?id=' . $id . '&' . $formData . '&err=' . urlencode('Failed to update contact.'));
+        header('Location: /contacts/edit.php?id=' . $id . '&' . $formData . '&err=' . urlencode('Failed to update contact.'));
     }
     exit;
 } catch (InvalidArgumentException $e) {
     // Validation error - redirect back to form with error
-    header('Location: /admin/contact_edit.php?id=' . $id . '&' . $formData . '&err=' . urlencode($e->getMessage()));
+    header('Location: /contacts/edit.php?id=' . $id . '&' . $formData . '&err=' . urlencode($e->getMessage()));
     exit;
 } catch (Exception $e) {
     // Other errors
-    header('Location: /admin/contact_edit.php?id=' . $id . '&' . $formData . '&err=' . urlencode('Error updating contact: ' . $e->getMessage()));
+    header('Location: /contacts/edit.php?id=' . $id . '&' . $formData . '&err=' . urlencode('Error updating contact: ' . $e->getMessage()));
     exit;
 }

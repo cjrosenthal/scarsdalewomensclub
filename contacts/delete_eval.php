@@ -6,17 +6,17 @@ require_login();
 
 // Only allow POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: /admin/contacts.php');
+    header('Location: /contacts/list.php');
     exit;
 }
 
 require_csrf();
 
-$redirect = trim($_POST['redirect'] ?? '/admin/contacts.php');
+$redirect = trim($_POST['redirect'] ?? '/contacts/list.php');
 $id = (int)($_POST['id'] ?? 0);
 
 if ($id <= 0) {
-    header('Location: /admin/contacts.php?err=' . urlencode('Invalid contact ID.'));
+    header('Location: /contacts/list.php?err=' . urlencode('Invalid contact ID.'));
     exit;
 }
 

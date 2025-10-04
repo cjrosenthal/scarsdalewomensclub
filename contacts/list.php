@@ -28,7 +28,7 @@ header_html('Contacts');
 
 <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
   <h2>Contacts</h2>
-  <a class="button" href="/admin/contact_add.php">Add Contact</a>
+  <a class="button" href="/contacts/add.php">Add Contact</a>
 </div>
 
 <?php if ($msg): ?><p class="flash"><?=h($msg)?></p><?php endif; ?>
@@ -77,7 +77,7 @@ header_html('Contacts');
               <td><?= h($contact['organization'] ?? '') ?></td>
               <td><?= h($contact['phone_number'] ?? '') ?></td>
               <td class="small">
-                <a class="button small" href="/admin/contact_edit.php?id=<?= (int)$contact['id'] ?>">Edit</a>
+                <a class="button small" href="/contacts/edit.php?id=<?= (int)$contact['id'] ?>">Edit</a>
               </td>
             </tr>
           <?php endforeach; ?>
@@ -115,7 +115,7 @@ header_html('Contacts');
     
     // Use AJAX to fetch updated contacts
     var xhr = new XMLHttpRequest();
-    var url = '/admin/contact_search_ajax.php?keyword=' + encodeURIComponent(keyword) + 
+    var url = '/contacts/search_ajax.php?keyword=' + encodeURIComponent(keyword) + 
               '&page=1&pageSize=' + encodeURIComponent(pageSize);
     
     xhr.open('GET', url, true);
@@ -157,7 +157,7 @@ header_html('Contacts');
       var pageSize = pageSizeSelect.value;
       
       var xhr = new XMLHttpRequest();
-      var url = '/admin/contact_search_ajax.php?keyword=' + encodeURIComponent(keyword) + 
+      var url = '/contacts/search_ajax.php?keyword=' + encodeURIComponent(keyword) + 
                 '&page=' + encodeURIComponent(page) + 
                 '&pageSize=' + encodeURIComponent(pageSize);
       

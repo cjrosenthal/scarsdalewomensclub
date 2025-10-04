@@ -24,9 +24,9 @@ header_html('Add Contact');
 <?php if ($err): ?><p class="error"><?=h($err)?></p><?php endif; ?>
 
 <div class="card">
-  <form method="post" action="/admin/contact_add_eval.php" class="stack">
+  <form method="post" action="/contacts/add_eval.php" class="stack">
     <input type="hidden" name="csrf" value="<?=h(csrf_token())?>">
-    <input type="hidden" name="redirect" value="/admin/contacts.php">
+    <input type="hidden" name="redirect" value="/contacts/list.php">
     
     <h3>Contact Information</h3>
     <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;">
@@ -53,7 +53,7 @@ header_html('Add Contact');
 
     <div class="actions">
       <button class="primary" type="submit">Create Contact</button>
-      <a class="button" href="/admin/contacts.php">Cancel</a>
+      <a class="button" href="/contacts/list.php">Cancel</a>
     </div>
   </form>
 </div>
