@@ -249,4 +249,53 @@ class ContactManagement {
         
         return $ok;
     }
+
+    /**
+     * Find potential duplicate contacts by email or phone number
+     * Returns array of contacts with match_type indicator
+     */
+    public static function findPotentialDuplicates(string $email = '', string $phoneNumber = ''): array {
+        $email = self::str($email);
+        $phoneNumber = self::str($phoneNumber);
+        
+        // If both are empty, return nothing
+        if ($email === '' && $phoneNumber === '') {
+            return [];
+        }
+        
+        $conditions = [];
+        $params = [];
+        
+        if ($email !== '') {
+            $conditions[] = 'email = ?';
+            $params[] = $email;
+        }
+        
+        if ($phoneNumber !== '') {
+            $conditions[] = 'phone_number = ?';
+            $params[] = $phoneNumber;
+        }
+        
+        $sql = 'SELECT id, first_name, last_name, email, organization, phone_number 
+                FROM contacts 
+                WHERE ' . implode(' OR ', $conditions);
+        
+        $st = self::pdo()->prepare($sql);
+        $st->execute($params);
+        $contacts = $st->fetchAll() ?: [];
+        
+        // Add match_type to each contact
+        foreach ($contacts as &$contact) {
+            $matchTypes = [];
+            if ($email !== '' && $contact['email'] === $email) {
+                $matchTypes[] = 'email';
+            }
+            if ($phoneNumber !== '' && $contact['phone_number'] === $phoneNumber) {
+                $matchTypes[] = 'phone';
+            }
+            $contact['match_type'] = implode(',', $matchTypes);
+        }
+        
+        return $contacts;
+    }
 }

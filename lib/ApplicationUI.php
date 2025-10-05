@@ -50,6 +50,7 @@ class ApplicationUI {
         if ($u) {
             $navLeft[] = $link('/index.php','Home');
             $navLeft[] = $link('/contacts/list.php','Contacts');
+            $navLeft[] = $link('/leads/list.php','Leads');
             
             // Admin menu goes on the right side
             if (!empty($u['is_admin'])) {
