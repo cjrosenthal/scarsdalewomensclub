@@ -128,9 +128,7 @@ header_html('Edit Lead');
       </div>
     </div>
 
-    <h3 style="margin-top:2rem;">Lead Details</h3>
-    
-    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;">
+    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;">
       <label>Channel
         <input type="text" name="channel" value="<?=h($lead['channel'] ?? '')?>" placeholder="e.g., Google, Zola">
       </label>
@@ -139,7 +137,7 @@ header_html('Edit Lead');
       </label>
     </div>
 
-    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;">
+    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;">
       <label>Number of People
         <input type="number" name="number_of_people" min="0" value="<?=h($lead['number_of_people'] ?? '')?>">
       </label>
@@ -155,6 +153,11 @@ header_html('Edit Lead');
 
     <label>Description
       <textarea name="description" rows="4"><?=h($lead['description'] ?? '')?></textarea>
+    </label>
+
+    <label style="display:flex;align-items:center;gap:8px;">
+      <input type="checkbox" name="tour_scheduled" value="1" <?=!empty($lead['tour_scheduled']) ? 'checked' : ''?>>
+      <span>Tour Scheduled?</span>
     </label>
 
     <div class="actions">
@@ -207,10 +210,6 @@ header_html('Edit Lead');
     <label>Add Comment
       <textarea id="commentText" rows="3" placeholder="Add a comment about this lead..." required></textarea>
     </label>
-    <label style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
-      <input type="checkbox" id="tourScheduled">
-      <span>Tour Scheduled?</span>
-    </label>
     <button type="submit" class="button primary">Add Comment</button>
     <div id="commentError" style="color:#c62828;margin-top:8px;display:none;"></div>
   </form>
@@ -229,9 +228,6 @@ header_html('Edit Lead');
             <span class="comment-date"><?=h(date('M j, Y g:i A', strtotime($comment['created_at'])))?></span>
           </div>
           <div class="comment-text"><?=h($comment['comment_text'])?></div>
-          <?php if ($comment['tour_scheduled']): ?>
-            <span class="tour-badge">📅 Tour Scheduled</span>
-          <?php endif; ?>
         </div>
       <?php endforeach; ?>
     <?php endif; ?>
@@ -772,7 +768,6 @@ header_html('Edit Lead');
   // Comment form submission
   var addCommentForm = document.getElementById('addCommentForm');
   var commentText = document.getElementById('commentText');
-  var tourScheduled = document.getElementById('tourScheduled');
   var commentError = document.getElementById('commentError');
   var commentsList = document.getElementById('commentsList');
   
@@ -810,8 +805,7 @@ header_html('Edit Lead');
     };
     xhr.send('csrf=' + encodeURIComponent('<?=h(csrf_token())?>') + 
              '&lead_id=' + encodeURIComponent(leadId) + 
-             '&comment_text=' + encodeURIComponent(text) + 
-             '&tour_scheduled=' + (tourScheduled.checked ? '1' : '0'));
+             '&comment_text=' + encodeURIComponent(text));
   });
 })();
 </script>

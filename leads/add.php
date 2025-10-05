@@ -82,6 +82,11 @@ header_html('Add Lead');
       <textarea name="description" rows="4"></textarea>
     </label>
 
+    <label style="display:flex;align-items:center;gap:8px;">
+      <input type="checkbox" name="tour_scheduled" value="1">
+      <span>Tour Scheduled?</span>
+    </label>
+
     <div class="actions">
       <button class="primary" type="submit">Create Lead</button>
       <a class="button" href="/leads/list.php">Cancel</a>

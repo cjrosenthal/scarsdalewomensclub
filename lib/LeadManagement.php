@@ -148,7 +148,7 @@ class LeadManagement {
     public static function findById(int $id): ?array {
         $st = self::pdo()->prepare(
             'SELECT l.id, l.main_contact_id, l.channel, l.created_at, l.party_type, 
-                    l.number_of_people, l.description, l.status,
+                    l.number_of_people, l.description, l.tour_scheduled, l.status,
                     c.first_name, c.last_name, c.email, c.organization, c.phone_number
              FROM leads l
              INNER JOIN contacts c ON l.main_contact_id = c.id
@@ -186,6 +186,7 @@ class LeadManagement {
             ? (int)$data['number_of_people'] 
             : null;
         $description = self::str($data['description'] ?? '');
+        $tourScheduled = !empty($data['tour_scheduled']);
         $status = self::str($data['status'] ?? 'active');
 
         if ($mainContactId <= 0) {
@@ -200,8 +201,8 @@ class LeadManagement {
         }
 
         $st = self::pdo()->prepare(
-            "INSERT INTO leads (main_contact_id, channel, party_type, number_of_people, description, status, created_at) 
-             VALUES (?, ?, ?, ?, ?, ?, NOW())"
+            "INSERT INTO leads (main_contact_id, channel, party_type, number_of_people, description, tour_scheduled, status, created_at) 
+             VALUES (?, ?, ?, ?, ?, ?, ?, NOW())"
         );
         $st->execute([
             $mainContactId,
@@ -209,6 +210,7 @@ class LeadManagement {
             $partyType !== '' ? $partyType : null,
             $numberOfPeople,
             $description !== '' ? $description : null,
+            $tourScheduled ? 1 : 0,
             $status
         ]);
         $id = (int)self::pdo()->lastInsertId();
@@ -218,6 +220,7 @@ class LeadManagement {
             'channel' => $channel,
             'party_type' => $partyType,
             'number_of_people' => $numberOfPeople,
+            'tour_scheduled' => $tourScheduled,
             'status' => $status
         ]);
         
@@ -235,6 +238,7 @@ class LeadManagement {
             ? (int)$data['number_of_people'] 
             : null;
         $description = self::str($data['description'] ?? '');
+        $tourScheduled = !empty($data['tour_scheduled']);
         $status = self::str($data['status'] ?? 'active');
 
         if ($mainContactId <= 0) {
@@ -251,7 +255,7 @@ class LeadManagement {
         $st = self::pdo()->prepare(
             "UPDATE leads 
              SET main_contact_id = ?, channel = ?, party_type = ?, number_of_people = ?, 
-                 description = ?, status = ? 
+                 description = ?, tour_scheduled = ?, status = ? 
              WHERE id = ?"
         );
         $ok = $st->execute([
@@ -260,6 +264,7 @@ class LeadManagement {
             $partyType !== '' ? $partyType : null,
             $numberOfPeople,
             $description !== '' ? $description : null,
+            $tourScheduled ? 1 : 0,
             $status,
             $id
         ]);
@@ -270,6 +275,7 @@ class LeadManagement {
                 'channel' => $channel,
                 'party_type' => $partyType,
                 'number_of_people' => $numberOfPeople,
+                'tour_scheduled' => $tourScheduled,
                 'status' => $status
             ]);
         }
@@ -375,7 +381,7 @@ class LeadManagement {
      */
     public static function getComments(int $leadId): array {
         $st = self::pdo()->prepare(
-            'SELECT lc.id, lc.lead_id, lc.comment_text, lc.tour_scheduled, lc.created_at,
+            'SELECT lc.id, lc.lead_id, lc.comment_text, lc.created_at,
                     lc.created_by_user_id, u.first_name, u.last_name
              FROM lead_comments lc
              LEFT JOIN users u ON lc.created_by_user_id = u.id
@@ -389,7 +395,7 @@ class LeadManagement {
     /**
      * Add a comment to a lead
      */
-    public static function addComment(UserContext $ctx, int $leadId, string $commentText, bool $tourScheduled = false): int {
+    public static function addComment(UserContext $ctx, int $leadId, string $commentText): int {
         $commentText = self::str($commentText);
         
         if ($commentText === '') {
@@ -404,20 +410,18 @@ class LeadManagement {
         }
 
         $st = self::pdo()->prepare(
-            "INSERT INTO lead_comments (lead_id, comment_text, created_by_user_id, tour_scheduled, created_at) 
-             VALUES (?, ?, ?, ?, NOW())"
+            "INSERT INTO lead_comments (lead_id, comment_text, created_by_user_id, created_at) 
+             VALUES (?, ?, ?, NOW())"
         );
         $st->execute([
             $leadId,
             $commentText,
-            $ctx->id,
-            $tourScheduled ? 1 : 0
+            $ctx->id
         ]);
         $id = (int)self::pdo()->lastInsertId();
         
         self::log($ctx, 'lead.add_comment', $leadId, [
-            'comment_id' => $id,
-            'tour_scheduled' => $tourScheduled
+            'comment_id' => $id
         ]);
         
         return $id;

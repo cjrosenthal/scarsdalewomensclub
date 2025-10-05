@@ -12,7 +12,6 @@ header('Content-Type: application/json');
 
 $leadId = (int)($_POST['lead_id'] ?? 0);
 $commentText = trim($_POST['comment_text'] ?? '');
-$tourScheduled = !empty($_POST['tour_scheduled']);
 
 if ($leadId <= 0) {
     echo json_encode(['success' => false, 'error' => 'Invalid lead ID.']);
@@ -27,7 +26,7 @@ if ($commentText === '') {
 try {
     $ctx = UserContext::getLoggedInUserContext();
     
-    $commentId = LeadManagement::addComment($ctx, $leadId, $commentText, $tourScheduled);
+    $commentId = LeadManagement::addComment($ctx, $leadId, $commentText);
     
     echo json_encode(['success' => true, 'comment_id' => $commentId]);
     exit;

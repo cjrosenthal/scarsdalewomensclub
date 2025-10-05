@@ -135,6 +135,7 @@ CREATE TABLE leads (
   party_type VARCHAR(100) DEFAULT NULL,
   number_of_people INT DEFAULT NULL,
   description TEXT DEFAULT NULL,
+  tour_scheduled TINYINT(1) NOT NULL DEFAULT 0,
   status ENUM('new', 'active', 'converted_to_reservation', 'deleted') NOT NULL DEFAULT 'active',
   CONSTRAINT fk_leads_main_contact FOREIGN KEY (main_contact_id) REFERENCES contacts(id) ON DELETE RESTRICT
 ) ENGINE=InnoDB;
@@ -165,7 +166,6 @@ CREATE TABLE lead_comments (
   comment_text TEXT NOT NULL,
   created_by_user_id INT DEFAULT NULL,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  tour_scheduled TINYINT(1) NOT NULL DEFAULT 0,
   CONSTRAINT fk_lc_lead FOREIGN KEY (lead_id) REFERENCES leads(id) ON DELETE CASCADE,
   CONSTRAINT fk_lc_created_by FOREIGN KEY (created_by_user_id) REFERENCES users(id) ON DELETE SET NULL
 ) ENGINE=InnoDB;
